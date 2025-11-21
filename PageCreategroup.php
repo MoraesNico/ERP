@@ -8,53 +8,108 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     
     <style>
-        .bg-purple-dark {
-            background-color: #3A107C;
-        }
-        .text-purple-dark {
-            color: #3A107C;
-        }
-        .btn-custom {
-            background-color: #B388FF;
-            border-color: #B388FF;
-            color: #3A107C; 
-            font-weight: bold;
-            transition: background-color 0.3s;
-        }
-        .btn-custom:hover:not(:disabled) {
-            background-color: #9A6ED8; 
-            border-color: #9A6ED8;
-            color: #FFFFFF;
-        }
-        
-        .creation-container {
-            min-height: 100vh;
-            background-color: #f8f9fa; 
-            padding: 40px 0; 
+        /* ==================== 1. VARIÁVEIS DE CORES ==================== */
+        :root {
+            --ape-blue: #203ccf; /* Cor Principal */
+            --ape-blue-light: #5a73ff; /* Cor para hover/seleção */
+            --ape-blue-bg-light: #f0f3ff; /* Fundo da página (Muito suave) */
+            --ape-blue-selection: #e6e9ff; /* Fundo do card selecionado */
         }
 
-        .module-card {
-            border: 2px solid #dee2e6;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            cursor: pointer;
+        /* ==================== 2. CLASSES DE CORES E UTILITÁRIOS ==================== */
+        .bg-ape-blue { background-color: var(--ape-blue) !important; }
+        .text-ape-blue { color: var(--ape-blue) !important; }
+        .border-ape-blue { border-color: var(--ape-blue) !important; }
+
+        /* ==================== 3. LAYOUT E CONTEÚDO ==================== */
+        .creation-container {
+            min-height: 100vh;
+            background-color: var(--ape-blue-bg-light); 
+            padding: 50px 0; /* Aumentado o padding vertical */
         }
-        .module-card:hover {
-            border-color: #B388FF; 
-            box-shadow: 0 0 10px rgba(179, 136, 255, 0.5);
+
+        .card {
+            border-radius: 1.25rem; /* Mais arredondado */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1); /* Sombra mais profunda e suave */
+            border: none; /* Remove a borda padrão do card para um visual mais flat */
         }
-        .module-selected {
-            border-color: #3A107C !important;
-            background-color: #f0f3ff;
-        }
-        .module-selected .bi-check-circle-fill {
-            color: #3A107C;
+        
+        /* Estilo dos Inputs (Flat Look) */
+        .form-control:focus {
+            border-color: var(--ape-blue);
+            box-shadow: 0 0 0 0.25rem rgba(32, 60, 207, 0.25); /* Foco azul suave */
         }
 
         .section-divider {
-            border-top: 2px dashed #e9ecef;
+            border-top: 1px solid #e9ecef;
             margin: 40px 0;
         }
+
+        /* ==================== 4. BOTÃO PRINCIPAL ==================== */
+        .btn-custom {
+            background-color: var(--ape-blue);
+            border-color: var(--ape-blue);
+            color: #FFFFFF; 
+            font-weight: 600; /* Levemente menos negrito */
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-radius: 0.75rem; /* Botão arredondado */
+        }
+        .btn-custom:hover:not(:disabled) {
+            background-color: var(--ape-blue-light); 
+            border-color: var(--ape-blue-light);
+            color: #FFFFFF;
+            transform: translateY(-2px); /* Efeito sutil de elevação */
+        }
+
+        /* ==================== 5. MÓDULOS (CARTÕES) ==================== */
+        .module-card {
+            border: 1px solid #dee2e6; /* Borda fina */
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            border-radius: 0.75rem;
+            position: relative; /* Para posicionar o checkmark */
+        }
+        .module-card:hover {
+            border-color: var(--ape-blue-light); 
+            box-shadow: 0 4px 15px rgba(32, 60, 207, 0.1);
+        }
+        .module-selected {
+            border-color: var(--ape-blue) !important;
+            background-color: var(--ape-blue-selection); 
+        }
+
+        /* Icone de seleção customizado para os cards */
+        .module-checkmark {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            opacity: 0;
+            color: var(--ape-blue);
+            transition: opacity 0.2s ease;
+        }
+        .module-selected .module-checkmark {
+            opacity: 1;
+        }
+
+        /* Esconde o input checkbox padrão, pois a label e o Javascript controlam o estado */
+        .module-card input[type="checkbox"] {
+            display: none !important; 
+        }
         
+        .module-price {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        /* Alerta de Total (Estilo Clean) */
+        .total-alert {
+            background-color: #ffffff; /* Fundo branco */
+            border: 3px solid var(--ape-blue-light); 
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(32, 60, 207, 0.1);
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -63,18 +118,18 @@
         <div class="container" style="max-width: 900px;">
             
             <div class="text-center mb-5">
-                <h1 class="display-6 fw-bold text-purple-dark">
-                    <i class="bi bi-building me-2"></i> Configure sua Organização
+                <h1 class="display-5 fw-bolder text-ape-blue">
+                    <i class="bi bi-person-workspace me-2"></i> Configuração Inicial
                 </h1>
                 <p class="lead text-muted">
-                    Sua jornada no apê ERP começa aqui. Preencha os dados e escolha seus módulos.
+                    Preencha os dados e selecione os módulos para iniciar seu Trial de 7 Dias. Após devera ter preenchido forma de pagamento para receber as devidas cobranças
                 </p>
             </div>
 
-            <div class="card shadow-lg p-md-5 p-3">
+            <div class="card shadow-lg p-md-5 p-4">
                 <form id="organizationForm">
                     
-                    <h2 class="fs-4 fw-bold text-purple-dark mb-4 border-bottom pb-2">1. Dados da Empresa</h2>
+                    <h2 class="fs-4 fw-bold text-ape-blue mb-4 pb-2 border-bottom border-2 border-ape-blue">1. Dados da Empresa</h2>
                     
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -89,91 +144,90 @@
                     
                     <div class="section-divider"></div>
                     
-                    <h2 class="fs-4 fw-bold text-purple-dark mb-4 border-bottom pb-2">2. Seleção de Módulos (Trial de 30 Dias)</h2>
+                    <h2 class="fs-4 fw-bold text-ape-blue mb-4 pb-2 border-bottom border-2 border-ape-blue">2. Seleção de Módulos (Trial Gratuito)</h2>
 
                     <div class="row g-4">
                         
                         <div class="col-md-4">
-                            <div class="module-card card h-100 module-selected">
+                            <div class="module-card card h-100 module-selected border-success border-2">
                                 <div class="card-body p-3">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <h5 class="card-title fw-bold text-purple-dark mb-1">
-                                            BÁSICO <span class="badge bg-purple-dark">Obrigatório</span>
-                                        </h5>
-                                        <i class="bi bi-check-circle-fill fs-4"></i>
-                                    </div>
+                                    <i class="bi bi-check-circle-fill module-checkmark" style="color: #198754;"></i>
+                                    <h5 class="card-title fw-bold text-success mb-1">
+                                        <i class="bi bi-gear-fill me-1"></i> BÁSICO 
+                                    </h5>
                                     <p class="card-text text-muted small">
-                                        Usuários, Segurança, Cadastro de Clientes/Fornecedores e Estrutura Básica do Sistema.
+                                        Usuários, Segurança, Permissões e estrutura fundamental do sistema.
                                     </p>
-                                    <h4 class="text-success fw-bold mt-2">R$ 0,00</h4>
+                                    <h4 class="text-success fw-bold mt-2 module-price">R$ 0,00</h4>
                                 </div>
-                                <input type="checkbox" id="moduleBasic" class="form-check-input visually-hidden" checked disabled>
+                                <input type="checkbox" id="moduleBasic" class="visually-hidden" checked disabled value="0.00">
                             </div>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="moduleFinanceiro" class="w-100">
+                            <label for="moduleFinanceiro" class="w-100 h-100 d-block">
                                 <div class="module-card card h-100" data-module="Financeiro">
                                     <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <h5 class="card-title fw-bold text-purple-dark mb-1">
-                                                Financeiro
-                                            </h5>
-                                            <input type="checkbox" id="moduleFinanceiro" class="form-check-input mt-0" value="89.90">
-                                        </div>
+                                        <i class="bi bi-check-circle-fill module-checkmark"></i>
+                                        <h5 class="card-title fw-bold text-ape-blue mb-1">
+                                            <i class="bi bi-cash-stack me-1"></i> Financeiro
+                                        </h5>
                                         <p class="card-text text-muted small">
-                                            Contas a pagar/receber, fluxo de caixa, conciliação bancária e DRE.
+                                            Contas a pagar/receber, fluxo de caixa, conciliação e DRE simplificada.
                                         </p>
-                                        <h4 class="text-purple-dark fw-bold mt-2">R$ 89,90<small class="text-muted fs-6"> / mês</small></h4>
+                                        <h4 class="text-ape-blue fw-bold mt-2 module-price">R$ 00,00<small class="text-muted fs-6"> / mês</small></h4>
                                     </div>
+                                    <input type="checkbox" id="moduleFinanceiro" class="module-checkbox" value="00.00">
                                 </div>
                             </label>
                         </div>
 
                         <div class="col-md-4">
-                            <label for="moduleRecebimento" class="w-100">
-                                <div class="module-card card h-100" data-module="Recebimento">
+                            <label for="moduleRecebimento" class="w-100 h-100 d-block">
+                                <div class="module-card card h-100" data-module="Logistica">
                                     <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-start">
-                                            <h5 class="card-title fw-bold text-purple-dark mb-1">
-                                                Recebimento de Produtos
-                                            </h5>
-                                            <input type="checkbox" id="moduleRecebimento" class="form-check-input mt-0" value="49.90">
-                                        </div>
+                                        <i class="bi bi-check-circle-fill module-checkmark"></i>
+                                        <h5 class="card-title fw-bold text-ape-blue mb-1">
+                                            <i class="bi bi-truck me-1"></i> Logística
+                                        </h5>
                                         <p class="card-text text-muted small">
-                                            Controle de estoque, entrada de notas fiscais e logística de recebimento.
+                                            Controle de recebimento de encomendas e direcionamento via E-mail para remetentes.
                                         </p>
-                                        <h4 class="text-purple-dark fw-bold mt-2">R$ 49,90<small class="text-muted fs-6"> / mês</small></h4>
+                                        <h4 class="text-ape-blue fw-bold mt-2 module-price">R$ 00,00<small class="text-muted fs-6"> / mês</small></h4>
                                     </div>
+                                    <input type="checkbox" id="moduleRecebimento" class="module-checkbox" value="00.00">
                                 </div>
                             </label>
                         </div>
 
-                    </div> <div class="alert mt-4 bg-light border-start border-5 border-purple-dark text-center">
-                        <p class="m-0 fw-semibold text-purple-dark">
-                            Total Estimado após 30 Dias: <span id="totalPrice" class="fs-5">R$ 139,80</span> / mês
+                    </div> 
+                    
+                    <div class="total-alert mt-5 text-center">
+                        <p class="m-0 fw-semibold text-ape-blue">
+                            Total Estimado <span class="text-muted">(Após o Trial)</span>: 
+                            <span id="totalPrice" class="fs-3 fw-bolder">R$ 0,00</span> / mês
                         </p>
-                        <small class="text-muted">O preço final dependerá dos módulos selecionados.</small>
+                        <small class="text-muted d-block mt-2">Você terá 7 dias de Trial Gratuito. A cobrança é mensal e pode ser alterada a qualquer momento.</small>
                     </div>
 
                     <div class="section-divider"></div>
 
-                    <h2 class="fs-4 fw-bold text-purple-dark mb-4 border-bottom pb-2">3. Confirmação e Termos</h2>
+                    <h2 class="fs-4 fw-bold text-ape-blue mb-4 pb-2 border-bottom border-2 border-ape-blue">3. Confirmação e Termos</h2>
 
-                    <div class="form-check mb-4 p-4 border rounded-3">
-                        <input class="form-check-input" type="checkbox" value="" id="adminAgreement" required>
-                        <label class="form-check-label text-muted small" for="adminAgreement">
-                            **Declaro que entendo e aceito:**
-                            <ul class="list-unstyled mt-2 mb-0 ms-3">
-                                <li class="text-purple-dark fw-semibold"><i class="bi bi-person-badge-fill me-2"></i> Minha conta será definida como a conta de Administrador Mestre desta Organização.</li>
-                                <li class="text-purple-dark fw-semibold mt-1"><i class="bi bi-clock-history me-2"></i> Após 30 dias de uso gratuito, os módulos selecionados serão cobrados mensalmente, de acordo com a forma de pagamento que informarei posteriormente.</li>
+                    <div class="form-check p-4 border rounded-4 bg-light">
+                        <input class="form-check-input mt-2" type="checkbox" value="" id="adminAgreement" required style="transform: scale(1.3);">
+                        <label class="form-check-label ms-2" for="adminAgreement">
+                            <span class="fw-bold text-dark">Declaro que entendo e aceito os termos:</span>
+                            <ul class="list-unstyled mt-2 mb-0 ms-3 small">
+                                <li class="text-ape-blue fw-semibold"><i class="bi bi-person-badge-fill me-2"></i> Minha conta será a de **Administrador Mestre**.</li>
+                                <li class="text-ape-blue fw-semibold mt-1"><i class="bi bi-clock-history me-2"></i> Após o Trial de 7 dias, os módulos selecionados serão cobrados mensalmente.</li>
                             </ul>
                         </label>
                     </div>
 
-                    <div class="d-grid pt-3">
+                    <div class="d-grid pt-4">
                         <button type="submit" class="btn btn-custom btn-lg">
-                            <i class="bi bi-save me-2"></i> Finalizar Cadastro e Iniciar Trial
+                            <i class="bi bi-box-arrow-in-right me-2"></i> Finalizar Cadastro e Iniciar Trial Gratuito
                         </button>
                     </div>
                 </form>
@@ -181,23 +235,36 @@
             
         </div>
     </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.8/jquery.inputmask.min.js"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const moduleCards = document.querySelectorAll('.module-card[data-module]');
-            const checkboxes = document.querySelectorAll('.module-card input[type="checkbox"]');
+            const checkboxes = document.querySelectorAll('.module-checkbox');
+
+            // 1. FUNÇÃO DE ATUALIZAÇÃO DE PREÇO (com formatação BRL)
             const updatePrice = () => {
                 let total = 0.00;
+                // Inclui o BÁSICO (R$ 0,00) que é disabled/checked
+                total += parseFloat(document.getElementById('moduleBasic').value); 
+                
                 checkboxes.forEach(cb => {
                     if (cb.checked) {
                         total += parseFloat(cb.value);
                     }
                 });
+                // Formatação para R$ 000,00
                 const formattedTotal = total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
                 document.getElementById('totalPrice').textContent = formattedTotal;
             };
+
+            // 2. LÓGICA DE SELEÇÃO DE MÓDULOS (Clique no Card)
             moduleCards.forEach(card => {
-                const checkbox = card.querySelector('input[type="checkbox"]');
+                const checkbox = card.querySelector('.module-checkbox');
+                
                 const updateCardStyle = () => {
                     if (checkbox.checked) {
                         card.classList.add('module-selected');
@@ -205,19 +272,34 @@
                         card.classList.remove('module-selected');
                     }
                 };
-                updateCardStyle();
-                card.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'INPUT') {
+
+                updateCardStyle(); // Inicializa o estilo
+
+                card.parentElement.addEventListener('click', (e) => {
+                    // Previne o clique de duplicar quando clica na label
+                    if (e.target.closest('.module-card') === card) {
                         checkbox.checked = !checkbox.checked;
                         updateCardStyle();
                         updatePrice();
                     }
                 });
+                
+                // Garante que a atualização de estilo ocorra caso o estado mude por outro meio
                 checkbox.addEventListener('change', () => {
                     updateCardStyle();
                     updatePrice();
                 });
             });
+
+            // 3. APLICAÇÃO DA MÁSCARA CNPJ (usando Inputmask)
+            if (window.jQuery && window.Inputmask) {
+                 $('#cnpj').inputmask({
+                    mask: '99.999.999/9999-99',
+                    jitMasking: true
+                });
+            }
+
+            // Chamada inicial
             updatePrice();
         });
     </script>
