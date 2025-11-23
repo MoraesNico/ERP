@@ -2,195 +2,142 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>M2NPS - Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M2NPS Dashboard</title>
     <style>
         body {
+            margin: 0;
+            font-family: Arial, sans-serif;
             background: #f5f5f5;
         }
-
         /* ASIDE */
-        .sidebar {
-            width: 260px;
-            height: 100vh;
+        aside {
             position: fixed;
             top: 0;
             left: 0;
+            width: 250px;
+            height: 100vh;
             background: #203ccf;
-            color: white;
-            padding: 25px 20px;
-            overflow-y: auto;
+            color: #fff;
+            padding-top: 20px;
         }
-
-        .sidebar h2 {
-            font-weight: 700;
-            font-size: 30px;
-            margin-bottom: 30px;
-        }
-
-        .module-title {
+        .logo {
+            text-align: center;
+            font-size: 22px;
             font-weight: bold;
-            font-size: 15px;
-            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu > li {
+            padding: 15px;
             cursor: pointer;
+            transition: 0.2s;
         }
-
-        .sidebar .nav-link {
-            color: #e3e9ff;
-            font-size: 15px;
-            border-radius: 8px;
-            padding: 8px 12px;
+        .menu > li:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
-        .sidebar .nav-link:hover {
-            background: #1b33ad;
-            color: white;
+        /* Submenus */
+        .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: none;
+            background: rgba(0, 0, 0, 0.15);
         }
-
-        /* NAVBAR SUPERIOR */
-        .topbar {
-            margin-left: 260px;
-            height: 70px;
-            background: #e9ecef;
-            border-bottom: 1px solid #d0d0d0;
+        .submenu li {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .submenu li:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+        /* NAVBAR */
+        nav {
+            margin-left: 250px;
+            height: 60px;
+            background: #e6e6e6;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 260px;
-            z-index: 10;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .search-box {
-            width: 350px;
-            border-radius: 30px;
+        .search {
+            width: 300px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
         }
-
-        .profile-pic {
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .profile img {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: #203ccf;
         }
-
-        /* CONTEÚDO CENTRAL */
-        .main-content {
-            margin-left: 260px;
-            margin-top: 90px;
-            padding: 40px;
+        /* CONTEÚDO */
+        main {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 30px;
             text-align: center;
         }
-
-        .welcome-text {
-            font-size: 40px;
-            font-weight: 700;
-            margin-bottom: 20px;
-        }
-
-        .sub-text {
-            font-size: 22px;
-        }
-
     </style>
 </head>
-
 <body>
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <h2>M2NPS</h2>
+<aside>
+    <div class="logo">M2NPS</div>
+    <ul class="menu">
+        <li onclick="toggleMenu('cadastro')">Cadastros</li>
+        <ul id="cadastro" class="submenu">
+            <li>Registrar Morador</li>
+            <li>Registrar Empresa</li>
+            <li>Cadastrar Módulo</li>
+        </ul>
 
-        <div class="accordion" id="menuModules">
+        <li onclick="toggleMenu('gestao')">Gestão</li>
+        <ul id="gestao" class="submenu">
+            <li>Permissões</li>
+            <li>Financeiro</li>
+            <li>Logs</li>
+        </ul>
 
-            <!-- MÓDULO CADASTRO -->
-            <div class="accordion-item bg-transparent border-0 text-white">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed bg-transparent text-white shadow-none" 
-                            type="button" data-bs-toggle="collapse" 
-                            data-bs-target="#modCadastro">
-                        Módulo Cadastro
-                    </button>
-                </h2>
-                <div id="modCadastro" class="accordion-collapse collapse">
-                    <div class="accordion-body p-0">
-                        <a class="nav-link" href="#">Registrar Pessoa</a>
-                        <a class="nav-link" href="#">Cadastrar Empresa</a>
-                        <a class="nav-link" href="#">Gerenciar Perfis</a>
-                    </div>
-                </div>
-            </div>
+        <li onclick="toggleMenu('suporte')">Suporte</li>
+        <ul id="suporte" class="submenu">
+            <li>Chamados</li>
+            <li>Central de Ajuda</li>
+        </ul>
+    </ul>
+</aside>
 
-            <!-- MÓDULO FINANCEIRO -->
-            <div class="accordion-item bg-transparent border-0 text-white">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed bg-transparent text-white shadow-none" 
-                            type="button" data-bs-toggle="collapse" 
-                            data-bs-target="#modFinanceiro">
-                        Módulo Financeiro
-                    </button>
-                </h2>
-                <div id="modFinanceiro" class="accordion-collapse collapse">
-                    <div class="accordion-body p-0">
-                        <a class="nav-link" href="#">Cadastrar Conta</a>
-                        <a class="nav-link" href="#">Relatórios</a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MÓDULO CONDOMÍNIO -->
-            <div class="accordion-item bg-transparent border-0 text-white">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed bg-transparent text-white shadow-none"
-                            type="button" data-bs-toggle="collapse" 
-                            data-bs-target="#modCondo">
-                        Módulo Condomínio
-                    </button>
-                </h2>
-                <div id="modCondo" class="accordion-collapse collapse">
-                    <div class="accordion-body p-0">
-                        <a class="nav-link" href="#">Registrar Encomenda</a>
-                        <a class="nav-link" href="#">Gerenciar Moradores</a>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- NAVBAR SUPERIOR -->
-    <div class="topbar">
-
-        <input type="text" class="form-control search-box" placeholder="Pesquisar...">
-
-        <div class="d-flex align-items-center gap-3">
-            <span class="fw-bold">Nicolas - Admin</span>
-            <div class="profile-pic"></div>
-        </div>
-
+<nav>
+    <input type="text" class="search" placeholder="Pesquisar...">
+    <div class="profile">
+        <img src="profile.png" alt="Perfil">
+        <span>Nicolas Moraes</span>
     </div>
+</nav>
 
+<main>
+    <h1>Bem-vindo ao painel do sistema!</h1>
+    <p>Selecione um módulo no menu lateral para começar.</p>
+</main>
 
-    <!-- CONTEÚDO CENTRAL -->
-    <div class="main-content">
+<script>
+function toggleMenu(id) {
+    const submenu = document.getElementById(id);
+    submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+}
+</script>
 
-        <h1 class="welcome-text">Bem-Vindo!</h1>
-
-        <p class="sub-text">
-            Seu ambiente de trabalho está carregado e pronto para uso.
-        </p>
-
-        <p class="sub-text">
-            Utilize o menu lateral ou a barra de pesquisa para navegar.
-        </p>
-
-    </div>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
